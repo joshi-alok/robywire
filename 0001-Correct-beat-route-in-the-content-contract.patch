@@ -1,0 +1,37 @@
+From 7269bacada069abcb8f57a27e0c2dca4af4816c9 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 24 Aug 2026 19:39:07 +0000
+Subject: [PATCH] Correct beat route in the content contract
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The spec said /news/<beat>, which collides with /news/<slug> — a post
+slugged "humanoids" would be ambiguous with the humanoids beat page.
+The implementation already uses /topics/<beat>; this brings the document
+in line and records why.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01DoP27rzu54WHAfQwNd6sTn
+---
+ docs/content-contract-v2.md | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/docs/content-contract-v2.md b/docs/content-contract-v2.md
+index 96e2b0a..1206167 100644
+--- a/docs/content-contract-v2.md
++++ b/docs/content-contract-v2.md
+@@ -255,7 +255,9 @@ Derived automatically from frontmatter. The automation does not produce these, b
+ are only correct if the frontmatter is:
+ 
+ - `/news` — index, newest first by `publishedAt`, paginated
+-- `/news/<beat>` — a landing page per beat in §4
++- `/topics/<beat>` — a landing page per beat in §4. **Corrected from `/news/<beat>`**,
++  which collided with `/news/<slug>`: a post slugged `humanoids` would have been
++  ambiguous with the humanoids beat page. `/topics/` removes the class of bug.
+ - `/rss.xml` — full feed
+ - `NewsArticle` JSON-LD per post, using `title`, `description`, `publishedAt`,
+   `updatedAt`, `author.name` and `image.light`
+-- 
+2.43.0
+

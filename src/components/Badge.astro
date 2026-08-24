@@ -1,0 +1,11 @@
+---
+import { beatName } from '../consts';
+interface Props { slug: string; accent?: boolean; link?: boolean }
+const { slug, accent = false, link = true } = Astro.props;
+const cls = `badge${accent ? ' badge--accent' : ''}`;
+---
+{link ? (
+  <a class={cls} href={`/topics/${slug}`} style="text-decoration:none">{beatName(slug)}</a>
+) : (
+  <span class={cls}>{beatName(slug)}</span>
+)}

@@ -1,0 +1,50 @@
+---
+title: "A humanoid ran 100m in 9.39 seconds at the Beijing games"
+description: "Tiangong Ultra beat Usain Bolt's 100m record. The more interesting result is how the sprint gait was arrived at — and what the same robots couldn't do."
+publishedAt: 2026-08-24
+categories: [humanoids, software-autonomy]
+format: news
+featured: false
+author:
+  name: "Robywire desk"
+---
+
+Tiangong Ultra covered 100 metres in 9.39 seconds at the second World Humanoid Robot Games in Beijing on Saturday, beating Usain Bolt's 9.58-second human world record. Honor's Lightning robot took 9.47s in the same event. It is the first time a humanoid has been reported under Bolt's mark in competition.
+
+## Key takeaways
+
+- Tiangong Ultra, built by the Beijing Humanoid Robot Innovation Centre, ran 9.39s. Honor's Lightning finished at 9.47s.
+- 9.39s means averaging 10.65 m/s from a standing start. Bolt averaged 10.44 m/s over his record run.
+- The 2026 sprints are fully autonomous — a real change from 2025, when track events were routinely teleoperated.
+- The sprint posture was not designed by engineers. It emerged from reinforcement learning, driven by the robot's thermal limits.
+- At the same games, robots could not reliably pick up beans with tweezers.
+
+## What happened
+
+The second edition of the games runs 22–26 August in Beijing, expanded to 32 events across athletics, football, boxing and household tasks. In the 100m, Tiangong Ultra clocked 9.39s against Bolt's 2009 record of 9.58s. Honor — better known for smartphones — took 9.47s with its Lightning robot. Honor has separately said a Lightning unit ran 9.32s in an internal company test; that run did not take place at the meet and was not independently timed.
+
+## The arithmetic is where it gets interesting
+
+A 9.39-second 100m is an average of 10.65 m/s, and that average includes accelerating from rest. Bolt's record averages 10.44 m/s with a peak around 12.3 m/s. To average 10.65 from a standing start, a machine has to peak meaningfully above 12 m/s.
+
+For scale: in April 2026, Unitree's H1 was measured on a track at roughly 10.1 m/s — a *peak*, not an average — and the outlet reporting it noted the measuring equipment might be subject to error. H1 is a different machine from a different manufacturer, so this is not a like-for-like comparison. But it puts the jump in context: the fastest publicly measured humanoid speed four months ago was below the average pace Tiangong Ultra sustained on Saturday.
+
+## The gait was not designed
+
+The most interesting engineering detail got almost no coverage. The sprint posture was not authored by the team — it emerged from reinforcement learning in simulation.
+
+Engineers started with a human-like arm swing. Trained across millions of simulated trials with a reward for speed, the system abandoned it, settling on arms held near the face, weight pitched forward, and the hips and waist driving the stride. The reason was thermal: the simulation modelled the shoulder joints' heat limits accurately enough that the policy learned to keep them cool by not swinging them.
+
+"This is more comfortable," motion control engineer Han Gang said of the resulting posture.
+
+That is the part worth taking seriously. A robot given a goal and an accurate model of its own actuator constraints found a gait no human coach would teach — because no human runner has to worry about cooking a shoulder motor. The same platform, reported as Tien Kung Omni, ran 400m in 45.66 seconds.
+
+## The hands are still the problem
+
+The other half of the same games is the useful correction. Alongside the sprint records, robots struggled with picking up beans using tweezers, opening lids, assembling power tools, unpacking boxes and connecting cables. Days earlier, a Unitree H1 completed a sprint and then veered off course, buckling at the waist and crashing into trackside equipment.
+
+Straight-line locomotion on a prepared track is close to solved. Dexterous manipulation and failure recovery — the two things that decide whether any of this reaches a warehouse floor — are not.
+
+## What to watch
+
+Whether the Beijing centre publishes the sprint's conditions and timing method, which would let the result be compared to an athletics record on equal terms. And whether any of the speed carries over to a surface that isn't a track: the games' own manipulation events suggest the gap between a sprint time and a useful machine is still the whole problem.

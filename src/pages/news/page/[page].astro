@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import PostRow from '../../../components/PostRow.astro';
+import { SITE, POSTS_PER_PAGE } from '../../../consts';
+
+export async function getStaticPaths({ paginate }: { paginate: any }) {
+  const all = (await getCollection('news')).sort(
+    (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+  );
+  // Page 1 lives at /news. Emitting it here too would be duplicate content.
+  return paginate(all, { pageSize: POSTS_PER_PAGE }).filter(
+    (p: any) => p.props.page.currentPage > 1
+  );
+}
+
+const { page } = Astro.props;
+// Page 2's "newer" link must point at /news, not the /news/page/1 we never build.
+const prev = page.currentPage === 2 ? '/news' : page.url.prev;
+---
+
+<Base
+  title={`Archive, page ${page.currentPage} — ${SITE.name}`}
+  description="Everything Robywire has published, newest first."
+  current="/news"
+>
+  <div class="page-head">
+    <div class="container page-head__inner">
+      <span class="eyebrow">Archive &middot; page {page.currentPage}</span>
+      <h1 class="page-title">Everything we have published</h1>
+    </div>
+  </div>
+  <section class="section container">
+    <div class="section__head">
+      <h2 class="section__title">All pieces</h2>
+      <span class="section__link">{page.total} total</span>
+    </div>
+    <div class="rows">{page.data.map((post: any) => <PostRow post={post} />)}</div>
+    <div class="hero__actions" style="margin-top:2rem">
+      {prev && <a class="btn btn--ghost" href={prev}>&larr; Newer</a>}
+      {page.url.next && <a class="btn btn--ghost" href={page.url.next}>Older &rarr;</a>}
+    </div>
+  </section>
+</Base>

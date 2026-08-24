@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PostRow from '../../components/PostRow.astro';
+import { SITE, POSTS_PER_PAGE } from '../../consts';
+
+const all = (await getCollection('news')).sort(
+  (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+);
+const posts = all.slice(0, POSTS_PER_PAGE);
+const hasNext = all.length > POSTS_PER_PAGE;
+---
+<Base title={`Archive — ${SITE.name}`} description="Everything Robywire has published, newest first." current="/news">
+  <div class="page-head"><div class="container page-head__inner">
+    <span class="eyebrow">Archive</span>
+    <h1 class="page-title">Everything we have published</h1>
+    <p class="lede">Newest first. Filed by beat — the subject, not the format.</p>
+  </div></div>
+  <section class="section container">
+    <div class="section__head">
+      <h2 class="section__title">All pieces</h2>
+      <span class="section__link">{all.length} total</span>
+    </div>
+    <div class="rows">{posts.map((post) => <PostRow post={post} />)}</div>
+    {hasNext && (
+      <div class="hero__actions" style="margin-top:2rem">
+        <a class="btn btn--ghost" href="/news/page/2">Older &rarr;</a>
+      </div>
+    )}
+  </section>
+</Base>

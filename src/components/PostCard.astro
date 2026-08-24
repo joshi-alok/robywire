@@ -1,0 +1,15 @@
+---
+import Badge from './Badge.astro';
+import { formatDate, isoDate, readingTime } from '../consts';
+const { post } = Astro.props;
+const d = post.data;
+---
+<article class="card">
+  <div class="card__meta">
+    <Badge slug={d.categories[0]} />
+    <time class="card__date" datetime={isoDate(d.publishedAt)}>{formatDate(d.publishedAt)}</time>
+  </div>
+  <h3 class="card__title"><a href={`/news/${post.id}`}>{d.title}</a></h3>
+  <p class="card__desc">{d.description}</p>
+  <span class="card__cta">Read &middot; {readingTime(post.body)}</span>
+</article>

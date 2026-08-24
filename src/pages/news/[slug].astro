@@ -1,0 +1,118 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Badge from '../../components/Badge.astro';
+import { SITE, formatDate, isoDate, readingTime } from '../../consts';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('news');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const d = post.data;
+const { Content } = await render(post);
+
+const url = new URL(`/news/${post.id}`, Astro.site ?? SITE.url).toString();
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: d.title,
+  description: d.description,
+  datePublished: d.publishedAt.toISOString(),
+  ...(d.updatedAt && { dateModified: d.updatedAt.toISOString() }),
+  author: [{ '@type': 'Person', name: d.author.name }],
+  publisher: { '@type': 'Organization', name: SITE.name },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  ...(d.image?.light && { image: [d.image.light] }),
+  articleSection: d.categories.map((c: string) => c),
+};
+---
+
+<Base
+  title={`${d.title} — ${SITE.name}`}
+  description={d.description}
+  current="/news"
+  ogImage={d.image?.light}
+  jsonLd={jsonLd}
+>
+  <section class="section container">
+    <article class="article">
+      <header>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          {d.categories.map((c: string, i: number) => (
+            <Badge slug={c} accent={i === 0} />
+          ))}
+        </div>
+        <h1 class="article__title">{d.title}</h1>
+        <p class="article__lede">{d.description}</p>
+
+        {d.image?.light && (
+          <figure style="margin:2rem 0 0">
+            <picture>
+              {d.image.dark && (
+                <source srcset={d.image.dark} media="(prefers-color-scheme: dark)" />
+              )}
+              <img
+                src={d.image.light}
+                alt=""
+                loading="eager"
+                style={`width:100%;border-radius:var(--r-lg);border:1px solid var(--line);aspect-ratio:${d.image.aspectRatio ?? '16/9'};object-fit:cover`}
+              />
+            </picture>
+            {d.image.credit && (
+              <figcaption class="specgrid__key" style="margin-top:.5rem;text-transform:none;letter-spacing:.02em">
+                {d.image.creditUrl ? (
+                  <a href={d.image.creditUrl} rel="noopener noreferrer" target="_blank" style="color:var(--fg-muted)">
+                    Image: {d.image.credit}
+                  </a>
+                ) : (
+                  <>Image: {d.image.credit}</>
+                )}
+              </figcaption>
+            )}
+          </figure>
+        )}
+
+        <div class="specgrid">
+          <div class="specgrid__cell">
+            <span class="specgrid__key">Published</span>
+            <span class="specgrid__val">
+              <time datetime={isoDate(d.publishedAt)}>{formatDate(d.publishedAt)}</time>
+            </span>
+          </div>
+          {d.updatedAt && (
+            <div class="specgrid__cell">
+              <span class="specgrid__key">Updated</span>
+              <span class="specgrid__val">
+                <time datetime={isoDate(d.updatedAt)}>{formatDate(d.updatedAt)}</time>
+              </span>
+            </div>
+          )}
+          <div class="specgrid__cell">
+            <span class="specgrid__key">Format</span>
+            <span class="specgrid__val">{d.format}</span>
+          </div>
+          <div class="specgrid__cell">
+            <span class="specgrid__key">Reading</span>
+            <span class="specgrid__val">{readingTime(post.body)}</span>
+          </div>
+          <div class="specgrid__cell">
+            <span class="specgrid__key">Byline</span>
+            <span class="specgrid__val">{d.author.name}</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      <footer class="article__foot">
+        <a href="/news">&larr; All pieces</a>
+        <a href={`mailto:corrections@${SITE.domain}`}>Spotted an error?</a>
+      </footer>
+    </article>
+  </section>
+</Base>

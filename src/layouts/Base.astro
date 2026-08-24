@@ -1,0 +1,134 @@
+---
+import '../styles/global.css';
+import Masthead from '../components/Masthead.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../consts';
+
+interface Props {
+  title: string;
+  description?: string;
+  current?: string;
+  ogImage?: string;
+  jsonLd?: Record<string, unknown>;
+}
+
+const {
+  title,
+  description = SITE.description,
+  current = '',
+  ogImage,
+  jsonLd,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).toString();
+const favicon =
+  'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E' +
+  '%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%232563eb%22/%3E%3C/svg%3E';
+
+// Runs before first paint so a stored theme choice never flashes the other theme.
+const themeInit = `(function(){try{var t=localStorage.getItem('rw-theme');
+if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#08090a" />
+    <script is:inline set:html={themeInit} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={favicon} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={SITE.name}
+      href={new URL('rss.xml', Astro.site ?? SITE.url).toString()}
+    />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
+    />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Masthead current={current} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      // Theme switch — three states, because the tokens define three.
+      (function () {
+        const root = document.documentElement;
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        const opts = document.querySelectorAll<HTMLElement>('[data-theme-option]');
+
+        function stored(): string {
+          try {
+            return localStorage.getItem('rw-theme') || 'system';
+          } catch {
+            return 'system';
+          }
+        }
+        function apply(choice: string) {
+          if (choice === 'system') root.removeAttribute('data-theme');
+          else root.setAttribute('data-theme', choice);
+          try {
+            if (choice === 'system') localStorage.removeItem('rw-theme');
+            else localStorage.setItem('rw-theme', choice);
+          } catch {
+            /* private mode — works for this visit, just isn't remembered */
+          }
+          opts.forEach((b) =>
+            b.setAttribute(
+              'aria-pressed',
+              String(b.getAttribute('data-theme-option') === choice)
+            )
+          );
+          const meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) {
+            const dark = choice === 'dark' || (choice === 'system' && mq.matches);
+            meta.setAttribute('content', dark ? '#08090a' : '#ffffff');
+          }
+        }
+        opts.forEach((b) =>
+          b.addEventListener('click', () =>
+            apply(b.getAttribute('data-theme-option') || 'system')
+          )
+        );
+        const onSystemChange = () => {
+          if (stored() === 'system') apply('system');
+        };
+        if (mq.addEventListener) mq.addEventListener('change', onSystemChange);
+        else if (mq.addListener) mq.addListener(onSystemChange);
+        apply(stored());
+      })();
+
+      // Newsletter form is deliberately inert until an endpoint is wired up.
+      document.querySelectorAll('[data-newsletter]').forEach((f) => {
+        f.addEventListener('submit', (ev) => {
+          ev.preventDefault();
+          const s = f.parentElement?.querySelector('[data-newsletter-status]');
+          if (s)
+            s.textContent =
+              'Not connected yet — add your newsletter endpoint to the form action. See README.';
+        });
+      });
+    </script>
+  </body>
+</html>

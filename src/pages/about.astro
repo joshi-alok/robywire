@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import Subscribe from '../components/Subscribe.astro';
+import { SITE } from '../consts';
+const contacts = [
+  ['Tips', `tips@${SITE.domain}`],
+  ['Editorial', `hello@${SITE.domain}`],
+  ['Corrections', `corrections@${SITE.domain}`],
+];
+---
+<Base title={`About — ${SITE.name}`} description="What Robywire covers and how we handle unverified claims." current="/about">
+  <div class="page-head"><div class="container page-head__inner">
+    <span class="eyebrow">About</span>
+    <h1 class="page-title">What Robywire is for</h1>
+  </div></div>
+  <section class="section container">
+    <div class="split">
+      <div class="prose">
+        <p>Robywire covers robotics for people who have to make decisions about it — engineers, integrators, buyers and the merely curious who are tired of reading the press release twice.</p>
+        <p>We write about four things: what shipped, what it costs, what the specifications actually mean, and which claims we could not verify. That last one is the point. Most robotics coverage reprints a demo video; the useful work is separating what a system has been shown to do from what it has been shown doing once.</p>
+        <h2>How we handle claims</h2>
+        <ul>
+          <li>Figures are attributed to a source in the piece — datasheet, briefing, or our own measurement.</li>
+          <li>Demonstrations are described as demonstrations, never as deployments.</li>
+          <li>Corrections are published on the piece itself, with the date.</li>
+        </ul>
+        <h2>Send us something</h2>
+        <p>Tips, datasheets, teardown photos and complaints are all welcome. If you are launching, we would rather have the unedited fixed-camera footage than the reel.</p>
+      </div>
+      <aside>
+        <dl class="metalist">
+          {contacts.map(([k, v]) => (
+            <div><dt>{k}</dt><dd><a href={`mailto:${v}`} style="color:var(--accent-fg);text-decoration:none">{v}</a></dd></div>
+          ))}
+        </dl>
+      </aside>
+    </div>
+  </section>
+  <section class="section container"><Subscribe /></section>
+</Base>

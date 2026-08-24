@@ -1,0 +1,19 @@
+---
+// TODO: replace with your newsletter provider's endpoint, then drop data-newsletter.
+---
+<section class="panel" id="subscribe">
+  <div class="panel__grid">
+    <div>
+      <h2 class="panel__title">The Robywire brief</h2>
+      <p class="panel__note">One email a week: what shipped, what it costs, and what we could not verify.</p>
+    </div>
+    <div>
+      <form class="field" data-newsletter novalidate>
+        <label class="visually-hidden" for="sub-email">Email address</label>
+        <input class="input" id="sub-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+        <button class="btn btn--primary" type="submit">Subscribe</button>
+      </form>
+      <p class="form-status" data-newsletter-status role="status"></p>
+    </div>
+  </div>
+</section>

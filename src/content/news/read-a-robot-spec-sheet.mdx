@@ -1,0 +1,58 @@
+---
+title: "How to read a robot spec sheet"
+description: "Payload, reach, repeatability, duty cycle. Four numbers decide whether a robot can do your job, and three of them are routinely misread."
+publishedAt: 2026-08-18
+categories: [industrial-warehouse, components-supply-chain]
+format: explainer
+featured: false
+author:
+  name: "Robywire desk"
+---
+
+Every robot launch comes with a spec table, and every spec table is a negotiation between the marketing team and the test lab. The numbers are rarely wrong. They are just measured under conditions that may have nothing to do with yours.
+
+Here is what each headline figure actually means, and what to ask before you trust it.
+
+## Payload is a number with an asterisk
+
+Rated payload is the mass the arm can carry *at a stated speed, orientation and centre of gravity offset*. Move the load 100 mm further from the tool flange and the effective capacity can fall by a third. Ask for the payload–inertia diagram, not the single number.
+
+Two more deductions people forget: the gripper is part of the payload, and so is the cabling and any sensor you bolt to the wrist.
+
+## Repeatability is not accuracy
+
+Repeatability is how tightly the robot clusters when it returns to the *same taught point*. Accuracy is how close it gets to a point specified in world coordinates. Industrial arms advertise repeatability because it is often ten times better than their accuracy.
+
+> **Rule of thumb**
+>
+> If your process teaches positions by jogging the robot there once, repeatability is the number that matters. If positions come from CAD or from a vision system, you need accuracy — and you will probably need calibration to get it.
+
+## The four figures, side by side
+
+| Spec | Measured as | What it hides |
+
+|---|---|---|
+
+| Payload | Mass at rated speed and CoG offset | Falls off sharply with load offset; gripper mass counts against it. |
+
+| Reach | Centre of joint 1 to tool flange | The far edge of the envelope is often unusable — singularities and reduced stiffness. |
+
+| Repeatability | ISO 9283 scatter over repeated cycles | Says nothing about absolute positioning accuracy. |
+
+| Duty cycle | Percentage of an hour at rated load | Thermal derating; continuous operation may be well below peak. |
+
+## Cycle time is a claim about a path, not a robot
+
+Published cycle times usually quote a standard pick-and-place move — a short vertical lift, a horizontal traverse, a descent. Real cells add blend radii, waypoints for obstacle avoidance, waits on sensor confirmation and conveyor sync. Budget generously.
+
+## For mobile robots, add three more
+
+- **Runtime versus duty runtime.** Idle runtime and runtime while driving a loaded shelf are different numbers.
+- **Localisation drift.** Ask over what distance and in what environment — a feature-rich warehouse is the easy case.
+- **Stop distance at rated speed.** This is the number your safety assessor will ask for, and it grows with load.
+
+> A spec sheet tells you what the robot did once, in a room built for it. Your job is to work out what it will do every day, in yours.
+
+## The questions to send back
+
+Before you shortlist anything, ask the vendor for: the payload–inertia curve, the accuracy figure alongside repeatability, the duty-cycle derating chart, and a cycle time for *your* path rather than theirs. Vendors who have done the testing will send these without argument. That in itself is a signal.

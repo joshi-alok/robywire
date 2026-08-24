@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../consts';
+---
+<Base title={`Not found — ${SITE.name}`} description="Page not found.">
+  <div class="page-head"><div class="container page-head__inner">
+    <span class="eyebrow">Error 404</span>
+    <h1 class="page-title">No signal on that path</h1>
+    <p class="lede">The page you asked for is not here.</p>
+  </div></div>
+  <section class="section container">
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="/news">Browse the archive</a>
+      <a class="btn btn--ghost" href="/">Back to the front page</a>
+    </div>
+  </section>
+</Base>

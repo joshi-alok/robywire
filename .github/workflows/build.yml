@@ -1,0 +1,26 @@
+name: Build
+
+# The guardrail for automated commits: the content schema is enforced at build
+# time, so a malformed post fails here instead of reaching the live site.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Summarise the collection
+        run: |
+          echo "### Content" >> "$GITHUB_STEP_SUMMARY"
+          echo "$(ls -1 src/content/news/*.mdx | wc -l) posts, \
+          $(find dist -name '*.html' | wc -l) pages built." >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,40 @@
+---
+title: "Vision-language-action models, in plain terms"
+description: "What the vision-language-action architecture actually changes about how a robot is programmed, and the three limits it does not remove."
+publishedAt: 2026-08-11
+categories: [software-autonomy]
+format: explainer
+featured: false
+author:
+  name: "Robywire desk"
+---
+
+For most of robotics history, a manipulation task was a program. Someone specified the poses, the approach vectors, the grip force and the recovery behaviour when the part was not where it was meant to be. Changing the task meant changing the program.
+
+A vision-language-action model changes the interface. The input is camera frames plus an instruction in ordinary language; the output is the next action — joint velocities, or an end-effector pose delta, produced at some control rate. The task specification moves from code into text and demonstration.
+
+## Where the training data comes from
+
+This is the part that decides everything. VLA models are trained on trajectories: recordings of a robot, usually teleoperated by a human, completing a task while cameras roll. Thousands of episodes per skill is a normal order of magnitude; the large open datasets are assembled by pooling across many labs and many robot bodies.
+
+Pooling across bodies is what makes the approach interesting and also what makes it fragile. A model trained on many embodiments learns something general about "pick up the mug". It also has to reconcile robots with different kinematics, different cameras and different control rates.
+
+> **What to ask at a demo**
+>
+> Was the instruction seen in training? Was the object? Was the background? A model that generalises across all three is a different achievement from one that generalises across none.
+
+## Three honest limitations
+
+- **Control rate.** Large models are slow. Systems typically run the VLA at a low rate for intent and a conventional controller underneath at kilohertz for stability. The impressive part is the sandwich, not just the model.
+- **Failure recovery.** Imitation data is mostly successful attempts, so models often have thin coverage of what to do after a slip.
+- **Force.** Vision tells you where things are, not how hard you are pressing. Contact-rich tasks still need force sensing and still benefit from classical control.
+
+## What it does not replace
+
+Safety-rated stopping, deterministic cycle times, and validation are unchanged. A factory line that must hit a fixed takt time and pass a safety assessment is not obviously improved by a policy whose behaviour is statistical. The near-term wins are in high-mix, low-volume work — the places where writing a program per task never paid off.
+
+> The interesting claim is not that a robot can pick up a mug. It is that the same weights can pick up a mug it has never seen, on a table it has never seen, from an instruction phrased in a way it has never read.
+
+## How to read the benchmark numbers
+
+Success rates are quoted per task, over a fixed number of trials, on a specific setup. Ninety per cent over twenty trials has a confidence interval wide enough to drive a forklift through. Look for trial counts, for whether objects and positions were randomised between trials, and for whether the evaluation was run by anyone other than the authors.

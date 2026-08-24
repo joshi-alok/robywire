@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import Badge from '../components/Badge.astro';
+import Subscribe from '../components/Subscribe.astro';
+import { SITE, BEATS, formatDate, isoDate, readingTime } from '../consts';
+
+const posts = (await getCollection('news')).sort(
+  (a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()
+);
+// A human sets featured: true. With none set, the newest post leads.
+const lead = posts.find((p) => p.data.featured) ?? posts[0];
+const rest = posts.filter((p) => p.id !== lead?.id).slice(0, 6);
+---
+<Base title={`${SITE.name} — ${SITE.tagline}`} description={SITE.description} current="/">
+  {lead && (
+    <section class="hero">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="hero__grid">
+          <div class="hero__main">
+            <Badge slug={lead.data.categories[0]} accent={true} />
+            <h1 class="display">{lead.data.title}</h1>
+            <p class="lede">{lead.data.description}</p>
+            <div class="hero__actions">
+              <a class="btn btn--primary" href={`/news/${lead.id}`}>Read the piece</a>
+              <a class="btn btn--ghost" href="/news">Browse the archive</a>
+            </div>
+          </div>
+          <aside class="hero__meta">
+            <dl class="metalist">
+              <div><dt>Published</dt><dd>{formatDate(lead.data.publishedAt)}</dd></div>
+              <div><dt>Filed under</dt><dd>{lead.data.categories.join(', ')}</dd></div>
+              <div><dt>Reading</dt><dd>{readingTime(lead.body)}</dd></div>
+              <div><dt>Byline</dt><dd>{lead.data.author.name}</dd></div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {rest.length > 0 && (
+    <section class="section container">
+      <div class="section__head">
+        <h2 class="section__title">Latest</h2>
+        <a class="section__link" href="/news">All pieces &rarr;</a>
+      </div>
+      <div class="cards cards--3">
+        {rest.map((post) => <PostCard post={post} />)}
+      </div>
+    </section>
+  )}
+
+  <section class="section container">
+    <div class="section__head">
+      <h2 class="section__title">Beats</h2>
+      <a class="section__link" href="/topics">All topics &rarr;</a>
+    </div>
+    <div class="cards cards--4">
+      {BEATS.map((b) => (
+        <article class="card card--compact">
+          <h3 class="card__title"><a href={`/topics/${b.slug}`}>{b.name}</a></h3>
+          <p class="card__desc">{b.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section container"><Subscribe /></section>
+</Base>

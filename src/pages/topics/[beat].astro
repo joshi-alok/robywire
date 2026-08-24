@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PostRow from '../../components/PostRow.astro';
+import { SITE, BEATS, TAGS } from '../../consts';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('news');
+  return [...BEATS, ...TAGS].map((b) => ({
+    params: { beat: b.slug },
+    props: {
+      beat: b,
+      posts: posts
+        .filter((p) => p.data.categories.includes(b.slug))
+        .sort((a, c) => c.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()),
+    },
+  }));
+}
+const { beat, posts } = Astro.props;
+---
+<Base title={`${beat.name} — ${SITE.name}`} description={beat.description} current="/topics">
+  <div class="page-head"><div class="container page-head__inner">
+    <span class="eyebrow">Beat</span>
+    <h1 class="page-title">{beat.name}</h1>
+    <p class="lede">{beat.description}</p>
+  </div></div>
+  <section class="section container">
+    <div class="section__head">
+      <h2 class="section__title">{beat.name}</h2>
+      <span class="section__link">{posts.length} {posts.length === 1 ? 'piece' : 'pieces'}</span>
+    </div>
+    {posts.length > 0 ? (
+      <div class="rows">{posts.map((post) => <PostRow post={post} />)}</div>
+    ) : (
+      <div class="callout">
+        <span class="callout__label">Nothing here yet</span>
+        <p>We have not published on this beat yet. It is a commitment, not a placeholder — coverage is coming.</p>
+      </div>
+    )}
+  </section>
+</Base>

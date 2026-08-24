@@ -1,0 +1,14 @@
+---
+import { NAV, SITE } from '../consts';
+---
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <span>&copy; {new Date().getUTCFullYear()} {SITE.name}</span>
+    <span class="site-footer__links">
+      {NAV.map((l) => <a href={l.href}>{l.label}</a>)}
+      <a href="/rss.xml">RSS</a>
+      <a href={`mailto:tips@${SITE.domain}`}>Send a tip</a>
+    </span>
+    <span class="site-footer__domain">{SITE.domain}</span>
+  </div>
+</footer>

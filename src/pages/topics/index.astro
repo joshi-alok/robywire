@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { SITE, BEATS, TAGS } from '../../consts';
+
+const posts = await getCollection('news');
+const count = (slug) => posts.filter((p) => p.data.categories.includes(slug)).length;
+---
+<Base title={`Topics — ${SITE.name}`} description="The seven beats Robywire covers, plus cross-cutting tags." current="/topics">
+  <div class="page-head"><div class="container page-head__inner">
+    <span class="eyebrow">Topics</span>
+    <h1 class="page-title">What we cover</h1>
+    <p class="lede">Seven beats, fixed. A story files under the subject it is about; funding rides along as a tag.</p>
+  </div></div>
+  <section class="section container">
+    <div class="section__head"><h2 class="section__title">Beats</h2></div>
+    <div class="cards cards--3">
+      {BEATS.map((b) => (
+        <article class="card">
+          <div class="card__meta"><span class="card__date">{count(b.slug)} {count(b.slug) === 1 ? 'piece' : 'pieces'}</span></div>
+          <h3 class="card__title"><a href={`/topics/${b.slug}`}>{b.name}</a></h3>
+          <p class="card__desc">{b.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+  <section class="section container">
+    <div class="section__head"><h2 class="section__title">Tags</h2></div>
+    <div class="cards cards--3">
+      {TAGS.map((t) => (
+        <article class="card">
+          <div class="card__meta"><span class="card__date">{count(t.slug)} {count(t.slug) === 1 ? 'piece' : 'pieces'}</span></div>
+          <h3 class="card__title"><a href={`/topics/${t.slug}`}>{t.name}</a></h3>
+          <p class="card__desc">{t.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</Base>

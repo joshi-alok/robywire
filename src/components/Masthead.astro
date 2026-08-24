@@ -1,0 +1,28 @@
+---
+import { NAV, SITE } from '../consts';
+import ThemeSwitch from './ThemeSwitch.astro';
+const { current = '' } = Astro.props;
+const isCurrent = (href: string) => href === current;
+---
+<header class="masthead">
+  <div class="container masthead__inner">
+    <a class="wordmark" href="/"><span class="wordmark__mark" aria-hidden="true"></span>{SITE.name}</a>
+    <nav class="nav" aria-label="Sections">
+      {NAV.map((l) => (
+        <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a>
+      ))}
+    </nav>
+    <div class="masthead__actions">
+      <ThemeSwitch />
+      <a class="btn btn--sm btn--ghost masthead__tip" href={`mailto:tips@${SITE.domain}`}>Send a tip</a>
+      <a class="btn btn--sm btn--primary" href="/#subscribe">Subscribe</a>
+    </div>
+  </div>
+  <div class="container">
+    <div class="navstrip">
+      {NAV.map((l) => (
+        <a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a>
+      ))}
+    </div>
+  </div>
+</header>

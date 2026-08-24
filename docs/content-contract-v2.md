@@ -255,7 +255,9 @@ Derived automatically from frontmatter. The automation does not produce these, b
 are only correct if the frontmatter is:
 
 - `/news` — index, newest first by `publishedAt`, paginated
-- `/news/<beat>` — a landing page per beat in §4
+- `/topics/<beat>` — a landing page per beat in §4. **Corrected from `/news/<beat>`**,
+  which collided with `/news/<slug>`: a post slugged `humanoids` would have been
+  ambiguous with the humanoids beat page. `/topics/` removes the class of bug.
 - `/rss.xml` — full feed
 - `NewsArticle` JSON-LD per post, using `title`, `description`, `publishedAt`,
   `updatedAt`, `author.name` and `image.light`

@@ -157,7 +157,7 @@ bar:
     - A paper we have not read past the abstract.
 
   quiet_day_fallback:
-    - A spec-sheet primer or explainer (format: explainer) on something in the
-      week's news that readers keep mis-reading.
-    - A follow-up: what happened to a launch we covered 6 or 12 months ago.
-      This is the cheapest genuinely original reporting available to us.
+    - "A spec-sheet primer or explainer (format: explainer) on something in the
+       week's news that readers keep mis-reading."
+    - "A follow-up: what happened to a launch we covered 6 or 12 months ago.
+       This is the cheapest genuinely original reporting available to us."
